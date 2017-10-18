@@ -7,3 +7,4 @@ python tutorial, staging for deep/machine learning course
 run the jupyter notebook on anaconda3 environment
 
 #### Also created for coderbunker deep learning
+
