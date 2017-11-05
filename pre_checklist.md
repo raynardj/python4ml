@@ -1,6 +1,6 @@
 # Check List Before Deep Learning
 
-## For coderbunker meetup sessions
+For CoderBunker meetup sessions, we're following the awesome [fast.ai course](course.fast.ai) here is the recommended skills before you start fast.ai
 
 ### Essential Skills
 
