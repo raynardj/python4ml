@@ -36,6 +36,7 @@ Then, in your linux machine, run wget (paste your url here):
 
 ```
 wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
+
 bash Anaconda*.sh
 ```
 
@@ -47,8 +48,26 @@ This anaconda package is basic a giant folder. Inside the folder is an isolated 
 
 The reason we involve virtual environment, has following benefits:
 
-* Inside the environment, play as crazy as you can, won't **** up the entire system.
+* Inside the environment, play as crazy as you can, you won't mess up the entire system.
 
 * Inside the environment, you can pip install every python resource without using root/sudo.
 
-* Inside the environment, most packages for data science are installed(eg. numpy pandas scipy), and their versions are coordinated. So lib with dependencies won't conflict in versions.
+* Inside the environment, most packages for data science are installed(eg. numpy pandas scipy jupyter), and their versions are coordinated. So lib with dependencies won't conflict in versions.
+
+Activate environment, assuming you install anaconda3 in your home directory:
+
+```
+source ~/anaconda3/bin/activate
+```
+
+From now on , you can see a ```(root)``` in front of command prompt, you are in the environment
+
+Type ```python```, enter. You can see the message shows the current python version.
+
+Try ```import pandas as pd```, enter, no error message, you can see the pandas is already installed!
+
+Personally, I prefer adding the following to the ~/.bashrc file, so next time I'm log on, I'will just enter ```ana3``` to activate environment instantly.
+
+```
+alias ana3='source ~/anaconda3/bin/activate'
+```
