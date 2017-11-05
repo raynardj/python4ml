@@ -12,7 +12,9 @@ AWS could service will have GPU instance,  other providers like paperspace, ali 
 
 This is a huge and evolving topic.
 
-## Install & Using Anaconda
+## Install And Using Anaconda
+
+### Find Anaconda Package
 
 Go download the anaconda in the following address:
 
@@ -32,17 +34,26 @@ First, copy the link address of the download url suitable for your machine. for 
 https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
 ```
 
+### Download
+
 Then, in your linux machine, run wget (paste your url here):
 
 ```
 wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
-
-bash Anaconda*.sh
 ```
 
 ```wget``` will download the file, takes about 10s or hours, depends on if your server is in China :-)
 
+### Install Anaconda
+
+```
+bash Anaconda*.sh
+```
+
 Then follow the installation steps, and defaultly they will install anaconda3 in your home folder.
+
+
+### Virtual Environment
 
 This anaconda package is basic a giant folder. Inside the folder is an isolated python virtual environment.
 
@@ -54,6 +65,7 @@ The reason we involve virtual environment, has following benefits:
 
 * Inside the environment, most packages for data science are installed(eg. numpy pandas scipy jupyter), and their versions are coordinated. So lib with dependencies won't conflict in versions.
 
+### Activate Anaconda Environment
 Activate environment, assuming you install anaconda3 in your home directory:
 
 ```
@@ -71,3 +83,83 @@ Personally, I prefer adding the following to the ~/.bashrc file, so next time I'
 ```
 alias ana3='source ~/anaconda3/bin/activate'
 ```
+
+### Jupyter Notebook
+
+Generate a configuration file 
+
+```
+jupyter notebook --generate-config
+```
+
+Get the hashed password, ```python```, enter.
+
+Run:
+```
+from notebook.auth import passwd; passwd()
+```
+Type in a password and remember. You can see python returned a hashed string, something like:
+```
+'sha1:451104bc6c2b:6f02f7c3184387974d6a15a495e4ad05d18cxx0f'
+```
+Copy this string.
+
+
+### Edit the config file
+```
+vim ~/.jupyter/jupyter_notebook_config.py
+# or 
+# nano ~/.jupyter/jupyter_notebook_config.py
+```
+
+Edit the following, uncomment(remove #) the following configures, and set values.
+
+Set the port,ip and password (the hashed string you copied)
+```
+## The port the notebook server will listen on.
+c.NotebookApp.port = 8888
+
+...
+
+## The IP address the notebook server will listen on.
+c.NotebookApp.ip = '*'
+
+...
+
+## Whether to open in a browser after starting. The specific browser used is
+#  platform dependent and determined by the python standard library `webbrowser`
+#  module, unless it is overridden using the --browser (NotebookApp.browser)
+#  configuration option.
+c.NotebookApp.open_browser = False
+
+...
+
+#  The string should be of the form type:salt:hashed-password.
+c.NotebookApp.password = u'sha1:451104bc6c2b:6f02f7c3184387974d6a15a495e4ad05d18cxx0f'
+```
+
+Save the configuration.
+
+### Run jupyter notebook
+
+Have a tmux running,(optional)
+```
+tmux new -s jn
+```
+
+Run 
+```
+jupyter notebook
+```
+
+If you are using jupyter.
+ctrl+'B', 'D' to detach the session. ```tmux attach -t jn``` to return to the jupyter session.
+
+### Use the notebook
+
+Open your local browser, open the url:
+
+```
+http://yourIpOrHost:/8888
+```
+Type in the password you set
