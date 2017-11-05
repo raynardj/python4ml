@@ -1,5 +1,7 @@
 # Environment Installation
 
+This is a brief reference to environment installation.
+
 ## Linux Node
 
 Have your own linux node, could be you local linux or online cloud linux.
