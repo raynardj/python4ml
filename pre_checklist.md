@@ -17,3 +17,6 @@ For CoderBunker meetup sessions, we're following the awesome [fast.ai course](co
 * Michael Nielsen's [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/index.html)
 
 * The deep learning book by Ian Goodfellow, Yoshua Bengio and Aaron Courville [Deep Learning](http://www.deeplearningbook.org/front_matter.pdf)
+
+* Andrew Ng's machine learning course on coursera: https://www.coursera.org/learn/machine-learning/home/welcome
+
