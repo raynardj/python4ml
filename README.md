@@ -17,7 +17,7 @@ This course is the basic deep learning course that follows closely on Jeremy How
 
 #### Environment Installation
 
-Follow the [installation instructions](https://github.com/raynardj/python4ml/blob/master/INSTALL.md)
+Follow the [installation instructions](https://github.com/raynardj/python4ml/blob/master/docs/INSTALL.md)
 
-[Checklist before we start and a reading list](https://github.com/raynardj/python4ml/blob/master/pre_checklist.md)
+[Checklist before we start and a reading list](https://github.com/raynardj/python4ml/blob/master/docs/pre_checklist.md)
 
