@@ -124,6 +124,7 @@ class discriminative(nn.Module):
     def __init__(self,fn_list,k_list = None):
         super(discriminative,self).__init__()
         self.fn_list = fn_list
+        #self.input_size = input_size
         
         if k_list == None:
             self.k_list = [3]*(len(self.fn_list)-1)
@@ -137,6 +138,7 @@ class discriminative(nn.Module):
             setattr(self,"res_%s"%(i),resblock_d(self.fn_list[i],
                                                  self.fn_list[i+1],
                                                  k_ = self.k_list[i]))
+        self.ln = nn.Linear(self.fn_list[-1],1,bias=True)
         
     def forward(self,x):
         x = self.conv_in(x)
@@ -144,4 +146,8 @@ class discriminative(nn.Module):
         
         for i in range(len(self.fn_list)-1):
             x = getattr(self,"res_%s"%(i))(x)
+            
+        x = x.mean(dim=-1).mean(dim=-1)
+        x = self.ln(x)
+        
         return x
