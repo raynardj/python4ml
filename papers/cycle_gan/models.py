@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 import math
+from torch.nn import functional as F
 
 class resblock(nn.Module):
     def __init__(self,out_,k_):
@@ -63,6 +64,7 @@ class generative(nn.Module):
             x = getattr(self,"bn_res_%s"%(i))(x)
             x = self.leaky(x)
         x = self.conv_out(x)
+        x = F.sigmoid(x)
         return x
 
 class resblock_d(nn.Module):
@@ -149,5 +151,7 @@ class discriminative(nn.Module):
             
         x = x.mean(dim=-1).mean(dim=-1)
         x = self.ln(x)
+        
+        x = F.sigmoid(x)
         
         return x
