@@ -12,10 +12,14 @@ class resblock(nn.Module):
         
         self.padding = math.floor(self.k_/2)
         self.conv1 = nn.Conv2d(self.out_,self.out_,self.k_,stride=2,padding=self.padding,bias=False)
+        self.conv2 = nn.Conv2d(self.out_,self.out_,self.k_,stride=2,padding=self.padding,bias=False)
         self.bn1 = nn.BatchNorm2d(self.out_)
-        self.leaky1 = nn.LeakyReLU()
-        self.upconv = nn.Upsample(scale_factor=2)
         self.bn2 = nn.BatchNorm2d(self.out_)
+        self.leaky1 = nn.LeakyReLU()
+        self.upconv1 = nn.Upsample(scale_factor=2)
+        self.upconv2 = nn.Upsample(scale_factor=2)
+        self.bn_up1 = nn.BatchNorm2d(self.out_)
+        self.bn_up2 = nn.BatchNorm2d(self.out_)
         
     def forward(self, x):
         x1 = x.clone()
@@ -24,8 +28,17 @@ class resblock(nn.Module):
         x = self.bn1(x)
         x = self.leaky1(x)
         
-        x = self.upconv(x)
+        x = self.conv2(x)
         x = self.bn2(x)
+        x = self.leaky1(x)
+        
+        x = self.upconv1(x)
+        x = self.bn_up1(x)
+        x = self.leaky1(x)
+        
+        x = self.upconv2(x)
+        x = self.bn_up2(x)
+        x = self.leaky1(x)
         x = x + x1
         return x
         
@@ -36,6 +49,9 @@ class generative(nn.Module):
         self.fn_list = fn_list
         if k_list == None:
             self.k_list = [3]*(len(self.fn_list)-1)
+#             self.k_list[0] = 3
+#             self.k_list[-2] = 3
+            self.k_list[-1] = 1
         else:
             self.k_list = k_list
         self.leaky = nn.LeakyReLU()
