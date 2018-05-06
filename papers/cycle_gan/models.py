@@ -1,7 +1,6 @@
 import torch
 from torch import nn
 import math
-from torch.nn import functional as F
 
 class resblock(nn.Module):
     def __init__(self,out_,k_):
@@ -12,14 +11,10 @@ class resblock(nn.Module):
         
         self.padding = math.floor(self.k_/2)
         self.conv1 = nn.Conv2d(self.out_,self.out_,self.k_,stride=2,padding=self.padding,bias=False)
-        self.conv2 = nn.Conv2d(self.out_,self.out_,self.k_,stride=2,padding=self.padding,bias=False)
         self.bn1 = nn.BatchNorm2d(self.out_)
-        self.bn2 = nn.BatchNorm2d(self.out_)
         self.leaky1 = nn.LeakyReLU()
-        self.upconv1 = nn.Upsample(scale_factor=2)
-        self.upconv2 = nn.Upsample(scale_factor=2)
-        self.bn_up1 = nn.BatchNorm2d(self.out_)
-        self.bn_up2 = nn.BatchNorm2d(self.out_)
+        self.upconv = nn.Upsample(scale_factor=2)
+        self.bn2 = nn.BatchNorm2d(self.out_)
         
     def forward(self, x):
         x1 = x.clone()
@@ -28,17 +23,8 @@ class resblock(nn.Module):
         x = self.bn1(x)
         x = self.leaky1(x)
         
-        x = self.conv2(x)
+        x = self.upconv(x)
         x = self.bn2(x)
-        x = self.leaky1(x)
-        
-        x = self.upconv1(x)
-        x = self.bn_up1(x)
-        x = self.leaky1(x)
-        
-        x = self.upconv2(x)
-        x = self.bn_up2(x)
-        x = self.leaky1(x)
         x = x + x1
         return x
         
@@ -49,9 +35,6 @@ class generative(nn.Module):
         self.fn_list = fn_list
         if k_list == None:
             self.k_list = [3]*(len(self.fn_list)-1)
-#             self.k_list[0] = 3
-#             self.k_list[-2] = 3
-            self.k_list[-1] = 1
         else:
             self.k_list = k_list
         self.leaky = nn.LeakyReLU()
@@ -80,7 +63,57 @@ class generative(nn.Module):
             x = getattr(self,"bn_res_%s"%(i))(x)
             x = self.leaky(x)
         x = self.conv_out(x)
-        x = F.sigmoid(x)
+        return x
+    
+class generative_chimney(nn.Module):
+    def __init__(self,fn_list,k_list = None, diameter=128):
+        super(generative_chimney,self).__init__()
+        self.fn_list = fn_list
+        self.diameter = diameter
+        if k_list == None:
+            self.k_list = [3]*(len(self.fn_list)-1)
+        else:
+            self.k_list = k_list
+        self.leaky = nn.LeakyReLU()
+        self.down_1 = nn.Conv2d(3, self.diameter,kernel_size = 3, padding = 1,stride=2,bias = False)
+        self.down_2 = nn.Conv2d(self.diameter, self.fn_list[0],kernel_size = 3, padding = 1,stride=2,bias = False)
+        
+        self.bn_down_1 = nn.BatchNorm2d(self.diameter)
+        self.bn_down_2 = nn.BatchNorm2d(self.fn_list[0])
+        
+        self.up = nn.Upsample(scale_factor = 2)
+        
+        for i in range(len(self.fn_list)-1):
+            setattr(self,"conv_%s"%(i),nn.Conv2d(self.fn_list[i],
+                                                 self.fn_list[i+1],
+                                                 kernel_size = self.k_list[i],
+                                                 padding = self.k2pad(self.k_list[i]),
+                                                 bias = False))
+            setattr(self,"conv_bn_%s"%(i),nn.BatchNorm2d(self.fn_list[i+1]))
+            
+        self.conv_out = nn.Conv2d(self.fn_list[-1],3,1,bias=False)
+            
+    def k2pad(self,k):
+        return math.floor(k/2)
+    
+    def forward(self,x):
+        x = self.down_1(x)
+        x = self.bn_down_1(x)
+        x = self.leaky(x)
+        
+        x = self.down_2(x)
+        x = self.bn_down_2(x)
+        x = self.leaky(x)
+        
+        x = self.up(x)
+        x = self.up(x)
+        
+        for i in range(len(self.fn_list)-1):
+            x = getattr(self,"conv_%s"%(i))(x)
+            x = getattr(self,"conv_bn_%s"%(i))(x)
+            x = self.leaky(x)
+
+        x = self.conv_out(x)
         return x
 
 class resblock_d(nn.Module):
@@ -167,7 +200,5 @@ class discriminative(nn.Module):
             
         x = x.mean(dim=-1).mean(dim=-1)
         x = self.ln(x)
-        
-        x = F.sigmoid(x)
         
         return x
