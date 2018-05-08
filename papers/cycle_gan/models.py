@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 import math
+from torch.nn import functional as F
 
 class resblock(nn.Module):
     def __init__(self,out_,k_):
@@ -66,20 +67,33 @@ class generative(nn.Module):
         return x
     
 class generative_chimney(nn.Module):
-    def __init__(self,fn_list,k_list = None, diameter=128):
+    def __init__(self,fn_list, dsamp = 3,k_list = None, diameter=128):
         super(generative_chimney,self).__init__()
         self.fn_list = fn_list
         self.diameter = diameter
+        self.dsamp = dsamp
         if k_list == None:
             self.k_list = [3]*(len(self.fn_list)-1)
         else:
             self.k_list = k_list
         self.leaky = nn.LeakyReLU()
-        self.down_1 = nn.Conv2d(3, self.diameter,kernel_size = 3, padding = 1,stride=2,bias = False)
-        self.down_2 = nn.Conv2d(self.diameter, self.fn_list[0],kernel_size = 3, padding = 1,stride=2,bias = False)
+        self.conv_in = nn.Conv2d(3, self.diameter,kernel_size = 3, padding = 1,stride=1,bias = False)
+        for i in range(self.dsamp):
+            setattr(self,"down_1_%s"%(i),nn.Conv2d(self.diameter, self.diameter,kernel_size = 3, padding = 1,stride=1,bias = False))
+            setattr(self,"down_2_%s"%(i),nn.Conv2d(self.diameter, self.diameter,kernel_size = 3, padding = 1,stride=2,bias = False))
+            
+            setattr(self,"bn_down_1_%s"%(i),nn.BatchNorm2d(self.diameter))
+            setattr(self,"bn_down_2_%s"%(i),nn.BatchNorm2d(self.diameter))
         
-        self.bn_down_1 = nn.BatchNorm2d(self.diameter)
-        self.bn_down_2 = nn.BatchNorm2d(self.fn_list[0])
+            setattr(self,"level_1_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
+            setattr(self,"level_2_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
+            setattr(self,"level_3_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
+        
+            setattr(self,"bn_level_1_%s"%(i), nn.BatchNorm2d(self.diameter))
+            setattr(self,"bn_level_2_%s"%(i), nn.BatchNorm2d(self.diameter))
+            setattr(self,"bn_level_3_%s"%(i), nn.BatchNorm2d(self.diameter))
+            
+        self.upout = nn.Conv2d(self.diameter, self.fn_list[0],kernel_size = 3, padding = 1,stride=1,bias = False)
         
         self.up = nn.Upsample(scale_factor = 2)
         
@@ -92,21 +106,37 @@ class generative_chimney(nn.Module):
             setattr(self,"conv_bn_%s"%(i),nn.BatchNorm2d(self.fn_list[i+1]))
             
         self.conv_out = nn.Conv2d(self.fn_list[-1],3,1,bias=False)
+        self.bn_out = nn.BatchNorm2d(3)
             
     def k2pad(self,k):
         return math.floor(k/2)
     
     def forward(self,x):
-        x = self.down_1(x)
-        x = self.bn_down_1(x)
-        x = self.leaky(x)
+        x = self.conv_in(x)
         
-        x = self.down_2(x)
-        x = self.bn_down_2(x)
+        for i in range(self.dsamp):
+            x = getattr(self,"down_1_%s"%(i))(x)
+            x = getattr(self,"bn_down_1_%s"%(i))(x)
+            x = self.leaky(x)
+            x = getattr(self,"down_2_%s"%(i))(x)
+            x = getattr(self,"bn_down_2_%s"%(i))(x)
+            x = self.leaky(x)
+            
+        for i in range(self.dsamp):
+            x = self.up(x)
+            
+            x = getattr(self,"level_1_%s"%(i))(x)
+            x = getattr(self,"bn_level_1_%s"%(i))(x)
+            x = self.leaky(x)
+            x = getattr(self,"level_2_%s"%(i))(x)
+            x = getattr(self,"bn_level_2_%s"%(i))(x)
+            x = self.leaky(x)
+            x = getattr(self,"level_3_%s"%(i))(x)
+            x = getattr(self,"bn_level_3_%s"%(i))(x)
+            x = self.leaky(x)
+            
+        x = self.upout(x)
         x = self.leaky(x)
-        
-        x = self.up(x)
-        x = self.up(x)
         
         for i in range(len(self.fn_list)-1):
             x = getattr(self,"conv_%s"%(i))(x)
@@ -114,6 +144,89 @@ class generative_chimney(nn.Module):
             x = self.leaky(x)
 
         x = self.conv_out(x)
+        # x = self.bn_out(x)
+        x = F.sigmoid(x)
+        return x
+    
+class generative_chimney2(nn.Module):
+    def __init__(self,fn_list, dsamp = 1,k_list = None, diameter=128):
+        super(generative_chimney2,self).__init__()
+        self.fn_list = fn_list
+        self.diameter = diameter
+        self.dsamp = dsamp
+        if k_list == None:
+            self.k_list = [3]*(len(self.fn_list)-1)
+        else:
+            self.k_list = k_list
+        self.leaky = nn.LeakyReLU()
+        self.conv_in = nn.Conv2d(3, self.diameter,kernel_size = 3, padding = 1,stride=1,bias = False)
+        for i in range(self.dsamp):
+            setattr(self,"down_1_%s"%(i),nn.Conv2d(self.diameter, self.diameter,kernel_size = 3, padding = 1,stride=1,bias = False))
+            setattr(self,"down_2_%s"%(i),nn.Conv2d(self.diameter, self.diameter,kernel_size = 3, padding = 1,stride=2,bias = False))
+            
+            setattr(self,"bn_down_1_%s"%(i),nn.BatchNorm2d(self.diameter))
+            setattr(self,"bn_down_2_%s"%(i),nn.BatchNorm2d(self.diameter))
+        
+            setattr(self,"level_1_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
+            setattr(self,"level_2_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
+            setattr(self,"level_3_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
+        
+            setattr(self,"bn_level_1_%s"%(i), nn.BatchNorm2d(self.diameter))
+            setattr(self,"bn_level_2_%s"%(i), nn.BatchNorm2d(self.diameter))
+            setattr(self,"bn_level_3_%s"%(i), nn.BatchNorm2d(self.diameter))
+            
+        self.upout = nn.Conv2d(self.diameter, self.fn_list[0],kernel_size = 3, padding = 1,stride=1,bias = False)
+        
+        self.up = nn.Upsample(scale_factor = 2)
+        
+        for i in range(len(self.fn_list)-1):
+            setattr(self,"conv_%s"%(i),nn.Conv2d(self.fn_list[i],
+                                                 self.fn_list[i+1],
+                                                 kernel_size = self.k_list[i],
+                                                 padding = self.k2pad(self.k_list[i]),
+                                                 bias = False))
+            setattr(self,"conv_bn_%s"%(i),nn.BatchNorm2d(self.fn_list[i+1]))
+            
+        self.conv_out = nn.Conv2d(self.fn_list[-1],3,1,bias=False)
+        self.bn_out = nn.BatchNorm2d(3)
+            
+    def k2pad(self,k):
+        return math.floor(k/2)
+    
+    def forward(self,x):
+        x = self.conv_in(x)
+        
+        for i in range(self.dsamp):
+            x = getattr(self,"down_1_%s"%(i))(x)
+            x = getattr(self,"bn_down_1_%s"%(i))(x)
+            x = self.leaky(x)
+            x = getattr(self,"down_2_%s"%(i))(x)
+            x = getattr(self,"bn_down_2_%s"%(i))(x)
+            x = self.leaky(x)
+            
+            x = self.up(x)
+            
+            x = getattr(self,"level_1_%s"%(i))(x)
+            x = getattr(self,"bn_level_1_%s"%(i))(x)
+            x = self.leaky(x)
+            x = getattr(self,"level_2_%s"%(i))(x)
+            x = getattr(self,"bn_level_2_%s"%(i))(x)
+            x = self.leaky(x)
+            x = getattr(self,"level_3_%s"%(i))(x)
+            x = getattr(self,"bn_level_3_%s"%(i))(x)
+            x = self.leaky(x)
+            
+        x = self.upout(x)
+        x = self.leaky(x)
+        
+        for i in range(len(self.fn_list)-1):
+            x = getattr(self,"conv_%s"%(i))(x)
+            x = getattr(self,"conv_bn_%s"%(i))(x)
+            x = self.leaky(x)
+
+        x = self.conv_out(x)
+        # x = self.bn_out(x)
+        x = F.sigmoid(x)
         return x
 
 class resblock_d(nn.Module):
