@@ -155,7 +155,7 @@ class generative_chimney2(nn.Module):
         self.diameter = diameter
         self.dsamp = dsamp
         if k_list == None:
-            self.k_list = [3]*(len(self.fn_list)-1)
+            self.k_list = [5]*(len(self.fn_list)-1)
         else:
             self.k_list = k_list
         self.leaky = nn.LeakyReLU()
