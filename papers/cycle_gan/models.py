@@ -3,68 +3,83 @@ from torch import nn
 import math
 from torch.nn import functional as F
 
+
+
+def conv_rfpad(ni,no,ks,stride=1):
+    pad = ks//2
+    return nn.Sequential(*[
+        nn.ReflectionPad2d([pad]*4),
+        nn.Conv2d(ni,no,kernel_size = ks, stride = stride, padding=0, bias = False),
+        nn.InstanceNorm2d(no),
+        nn.LeakyReLU(inplace = True)
+    ])
+
+def conv_layer_ins(ni,no,ks,stride=1):
+    return nn.Sequential(*[
+        nn.Conv2d(ni,no,kernel_size = ks, stride = stride, padding = (1,1),bias = False),
+        nn.InstanceNorm2d(no),
+        nn.LeakyReLU(inplace = True)
+    ])
+
+def deconv(ni,no,ks,stride=(2,2)):
+    return nn.Sequential(*[
+        nn.ConvTranspose2d(ni,no,kernel_size = ks, stride = stride, padding = (1,1),bias = False),
+        nn.InstanceNorm2d(no),
+        nn.LeakyReLU(inplace = True)
+    ])
 class resblock(nn.Module):
-    def __init__(self,out_,k_):
+    def __init__(self,fn,ks,shrink=1):
         super(resblock,self).__init__()
-        
-        self.out_ = out_
-        self.k_ = k_
-        
-        self.padding = math.floor(self.k_/2)
-        self.conv1 = nn.Conv2d(self.out_,self.out_,self.k_,stride=2,padding=self.padding,bias=False)
-        self.bn1 = nn.BatchNorm2d(self.out_)
-        self.leaky1 = nn.LeakyReLU()
-        self.upconv = nn.Upsample(scale_factor=2)
-        self.bn2 = nn.BatchNorm2d(self.out_)
+        self.conv1 = conv_layer_ins(fn,fn//shrink,ks)
+        self.conv2 = conv_layer_ins(fn//shrink,fn,ks)
         
     def forward(self, x):
-        x1 = x.clone()
-        
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.leaky1(x)
-        
-        x = self.upconv(x)
-        x = self.bn2(x)
-        x = x + x1
+        x = x+self.conv1(self.conv2(x))
         return x
-        
 
 class generative(nn.Module):
-    def __init__(self,fn_list,k_list = None):
+    def __init__(self,bn,fn=256,k_list = None):
         super(generative,self).__init__()
-        self.fn_list = fn_list
-        if k_list == None:
-            self.k_list = [3]*(len(self.fn_list)-1)
-        else:
-            self.k_list = k_list
-        self.leaky = nn.LeakyReLU()
-        for i in range(len(self.fn_list)-1):
-            setattr(self,"tran_%s"%(i),nn.Conv2d(self.fn_list[i],
-                                                 self.fn_list[i+1],
-                                                 kernel_size = self.k_list[i],
-                                                 padding = self.k2pad(self.k_list[i]),
-                                                 bias = False))
-            setattr(self,"bn_trans_%s"%(i),nn.BatchNorm2d(self.fn_list[i+1]))
-            
-            setattr(self,"resblock_%s"%(i),resblock(self.fn_list[i+1],self.k_list[i]))
-            setattr(self,"bn_res_%s"%(i),nn.BatchNorm2d(self.fn_list[i+1]))
-            
-        self.conv_out = nn.Conv2d(self.fn_list[-1],3,1,bias=False)
-            
-    def k2pad(self,k):
-        return math.floor(k/2)
+        self.bn = bn # block number list
+        self.fn = fn
+        self.conv_in = conv_rfpad(3,self.fn//4,7)
+        
+        # Down sampling
+        self.conv_down1 = conv_layer_ins(self.fn//4,self.fn//2,ks=3,stride=2)
+        self.conv_down2 = conv_layer_ins(self.fn//2,self.fn,ks=3,stride=2)
+        
+        for i in range(self.bn):
+            setattr(self,"resblock_b%s"%(i),resblock(self.fn,ks=3))
+        
+        # Upsampling using deconv
+        self.deconv_1 = deconv(self.fn,self.fn//2,ks=3)
+        self.deconv_2 = deconv(self.fn//2,self.fn//4,ks=3)
+        self.conv_out = conv_rfpad(self.fn//4,3,ks=7)
     
     def forward(self,x):
-        for i in range(len(self.fn_list)-1):
-            x = getattr(self,"tran_%s"%(i))(x)
-            x = getattr(self,"bn_trans_%s"%(i))(x)
-            x = self.leaky(x)
-            x = getattr(self,"resblock_%s"%(i))(x)
-            x = getattr(self,"bn_res_%s"%(i))(x)
-            x = self.leaky(x)
-        x = self.conv_out(x)
-        return x
+        x = self.conv_in(x)
+        x = self.conv_down2(self.conv_down1(x))
+        for i in range(self.bn):
+            x = getattr(self,"resblock_b%s"%(i))(x)
+        x = self.deconv_2(self.deconv_1(x))
+        return F.tanh(self.conv_out(x))
+
+class discriminative(nn.Module):
+    def __init__(self):
+        super(discriminative,self).__init__()
+        self.conv_in = conv_layer_ins(3,64,3,stride=2)
+        layers = []
+        self.convs = nn.Sequential(*[
+            conv_layer_ins(64,128,3,stride=2),
+            conv_layer_ins(128,256,3,stride=2),
+            conv_layer_ins(256,512,3,stride=2),
+            nn.Conv2d(512,1,3,stride=1,padding=1,bias=False),
+        ])
+        
+    def forward(self,x):
+        bs = x.size()[0]
+        x = self.convs(self.conv_in(x))
+        return x.view(bs,-1).mean(1)
     
 class generative_chimney(nn.Module):
     def __init__(self,fn_list, dsamp = 3,k_list = None, diameter=128):
@@ -282,36 +297,4 @@ class resblock_d(nn.Module):
             x = self.bn_out(x)
             x = self.leaky(x)
             
-        return x
-
-class discriminative(nn.Module):
-    def __init__(self,fn_list,k_list = None):
-        super(discriminative,self).__init__()
-        self.fn_list = fn_list
-        #self.input_size = input_size
-        
-        if k_list == None:
-            self.k_list = [3]*(len(self.fn_list)-1)
-        else:
-            self.k_list = k_list
-            
-        self.conv_in = nn.Conv2d(3,self.fn_list[0],3,padding=1,bias=False)
-        self.bn_in = nn.BatchNorm2d(self.fn_list[0])
-        
-        for i in range(len(self.fn_list)-1):
-            setattr(self,"res_%s"%(i),resblock_d(self.fn_list[i],
-                                                 self.fn_list[i+1],
-                                                 k_ = self.k_list[i]))
-        self.ln = nn.Linear(self.fn_list[-1],1,bias=True)
-        
-    def forward(self,x):
-        x = self.conv_in(x)
-        x = self.bn_in(x)
-        
-        for i in range(len(self.fn_list)-1):
-            x = getattr(self,"res_%s"%(i))(x)
-            
-        x = x.mean(dim=-1).mean(dim=-1)
-        x = self.ln(x)
-        
         return x
