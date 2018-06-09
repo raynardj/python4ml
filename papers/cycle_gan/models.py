@@ -43,19 +43,19 @@ class generative(nn.Module):
         self.bn = bn # block number list
         self.fn = fn
         self.conv_in = conv_rfpad(3,self.fn//4,7)
-
+        
         # Down sampling
         self.conv_down1 = conv_layer_ins(self.fn//4,self.fn//2,ks=3,stride=2)
         self.conv_down2 = conv_layer_ins(self.fn//2,self.fn,ks=3,stride=2)
-
+        
         for i in range(self.bn):
             setattr(self,"resblock_b%s"%(i),resblock(self.fn,ks=3))
-
+        
         # Upsampling using deconv
         self.deconv_1 = deconv(self.fn,self.fn//2,ks=3)
         self.deconv_2 = deconv(self.fn//2,self.fn//4,ks=3)
         self.conv_out = conv_rfpad(self.fn//4,3,ks=7)
-
+    
     def forward(self,x):
         x = self.conv_in(x)
         x = self.conv_down2(self.conv_down1(x))
@@ -75,12 +75,12 @@ class discriminative(nn.Module):
             conv_layer_ins(256,512,3,stride=2),
             nn.Conv2d(512,1,3,stride=1,padding=1,bias=False),
         ])
-
+        
     def forward(self,x):
         bs = x.size()[0]
         x = self.convs(self.conv_in(x))
         return x.view(bs,-1).mean(1)
-
+    
 class generative_chimney(nn.Module):
     def __init__(self,fn_list, dsamp = 3,k_list = None, diameter=128):
         super(generative_chimney,self).__init__()
@@ -96,22 +96,22 @@ class generative_chimney(nn.Module):
         for i in range(self.dsamp):
             setattr(self,"down_1_%s"%(i),nn.Conv2d(self.diameter, self.diameter,kernel_size = 3, padding = 1,stride=1,bias = False))
             setattr(self,"down_2_%s"%(i),nn.Conv2d(self.diameter, self.diameter,kernel_size = 3, padding = 1,stride=2,bias = False))
-
+            
             setattr(self,"bn_down_1_%s"%(i),nn.BatchNorm2d(self.diameter))
             setattr(self,"bn_down_2_%s"%(i),nn.BatchNorm2d(self.diameter))
-
+        
             setattr(self,"level_1_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
             setattr(self,"level_2_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
             setattr(self,"level_3_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
-
+        
             setattr(self,"bn_level_1_%s"%(i), nn.BatchNorm2d(self.diameter))
             setattr(self,"bn_level_2_%s"%(i), nn.BatchNorm2d(self.diameter))
             setattr(self,"bn_level_3_%s"%(i), nn.BatchNorm2d(self.diameter))
-
+            
         self.upout = nn.Conv2d(self.diameter, self.fn_list[0],kernel_size = 3, padding = 1,stride=1,bias = False)
-
+        
         self.up = nn.Upsample(scale_factor = 2)
-
+        
         for i in range(len(self.fn_list)-1):
             setattr(self,"conv_%s"%(i),nn.Conv2d(self.fn_list[i],
                                                  self.fn_list[i+1],
@@ -122,13 +122,13 @@ class generative_chimney(nn.Module):
             
         self.conv_out = nn.Conv2d(self.fn_list[-1],3,1,bias=False)
         self.bn_out = nn.BatchNorm2d(3)
-
+            
     def k2pad(self,k):
         return math.floor(k/2)
     
     def forward(self,x):
         x = self.conv_in(x)
-
+        
         for i in range(self.dsamp):
             x = getattr(self,"down_1_%s"%(i))(x)
             x = getattr(self,"bn_down_1_%s"%(i))(x)
@@ -136,10 +136,10 @@ class generative_chimney(nn.Module):
             x = getattr(self,"down_2_%s"%(i))(x)
             x = getattr(self,"bn_down_2_%s"%(i))(x)
             x = self.leaky(x)
-
+            
         for i in range(self.dsamp):
             x = self.up(x)
-
+            
             x = getattr(self,"level_1_%s"%(i))(x)
             x = getattr(self,"bn_level_1_%s"%(i))(x)
             x = self.leaky(x)
@@ -149,10 +149,10 @@ class generative_chimney(nn.Module):
             x = getattr(self,"level_3_%s"%(i))(x)
             x = getattr(self,"bn_level_3_%s"%(i))(x)
             x = self.leaky(x)
-
+            
         x = self.upout(x)
         x = self.leaky(x)
-
+        
         for i in range(len(self.fn_list)-1):
             x = getattr(self,"conv_%s"%(i))(x)
             x = getattr(self,"conv_bn_%s"%(i))(x)
@@ -178,18 +178,18 @@ class generative_chimney2(nn.Module):
         for i in range(self.dsamp):
             setattr(self,"down_1_%s"%(i),nn.Conv2d(self.diameter, self.diameter,kernel_size = 3, padding = 1,stride=1,bias = False))
             setattr(self,"down_2_%s"%(i),nn.Conv2d(self.diameter, self.diameter,kernel_size = 3, padding = 1,stride=2,bias = False))
-
+            
             setattr(self,"bn_down_1_%s"%(i),nn.BatchNorm2d(self.diameter))
             setattr(self,"bn_down_2_%s"%(i),nn.BatchNorm2d(self.diameter))
         
             setattr(self,"level_1_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
             setattr(self,"level_2_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
             setattr(self,"level_3_%s"%(i),nn.Conv2d(self.diameter,self.diameter,kernel_size=3, padding = 1, bias = False))
-
+        
             setattr(self,"bn_level_1_%s"%(i), nn.BatchNorm2d(self.diameter))
             setattr(self,"bn_level_2_%s"%(i), nn.BatchNorm2d(self.diameter))
             setattr(self,"bn_level_3_%s"%(i), nn.BatchNorm2d(self.diameter))
-
+            
         self.upout = nn.Conv2d(self.diameter, self.fn_list[0],kernel_size = 3, padding = 1,stride=1,bias = False)
         
         self.up = nn.Upsample(scale_factor = 2)
@@ -204,13 +204,13 @@ class generative_chimney2(nn.Module):
             
         self.conv_out = nn.Conv2d(self.fn_list[-1],3,1,bias=False)
         self.bn_out = nn.BatchNorm2d(3)
-
+            
     def k2pad(self,k):
         return math.floor(k/2)
     
     def forward(self,x):
         x = self.conv_in(x)
-
+        
         for i in range(self.dsamp):
             x = getattr(self,"down_1_%s"%(i))(x)
             x = getattr(self,"bn_down_1_%s"%(i))(x)
@@ -218,9 +218,9 @@ class generative_chimney2(nn.Module):
             x = getattr(self,"down_2_%s"%(i))(x)
             x = getattr(self,"bn_down_2_%s"%(i))(x)
             x = self.leaky(x)
-
+            
             x = self.up(x)
-
+            
             x = getattr(self,"level_1_%s"%(i))(x)
             x = getattr(self,"bn_level_1_%s"%(i))(x)
             x = self.leaky(x)
@@ -230,7 +230,7 @@ class generative_chimney2(nn.Module):
             x = getattr(self,"level_3_%s"%(i))(x)
             x = getattr(self,"bn_level_3_%s"%(i))(x)
             x = self.leaky(x)
-
+            
         x = self.upout(x)
         x = self.leaky(x)
         
