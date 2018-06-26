@@ -2,10 +2,11 @@
 
 python tutorial, staging for deep/machine learning course
 
-[Lesson 1](https://github.com/raynardj/python4ml/blob/master/lesson1.ipynb)
-[Lesson 2](https://github.com/raynardj/python4ml/blob/master/lesson2.ipynb)
-[Lesson 3](https://github.com/raynardj/python4ml/blob/master/lesson3.ipynb)
-[Lesson 4](https://github.com/raynardj/python4ml/blob/master/lesson4.ipynb)
+[Lesson 1](lesson1.ipynb)
+[Lesson 2](lesson2.ipynb)
+[Lesson 3](lesson3.ipynb)
+[Lesson 4](lesson4.ipynb)
+[lesson 5](lesosn5.ipynb)
 
 #### Originally designed to teach Alex python, thank you for your constant learning enthusiasm
 
