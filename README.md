@@ -42,3 +42,8 @@ assuming your anaconda3 is at ```~/anaconda3/```
 
 [Checklist before we start and a reading list](https://raynardj.github.io/python4ml/docs/pre_checklist)
 
+#### Experiments
+
+* [The coord conv from the uber paper](https://raynardj.github.io/python4ml/docs/coord_conv)
+
+![coord conv pic](docs/coord_conv=250*200)
