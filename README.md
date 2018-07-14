@@ -46,6 +46,6 @@ assuming your anaconda3 is at ```~/anaconda3/```
 
 * [The coord conv from the uber paper](https://raynardj.github.io/python4ml/docs/coord_conv)
 
-![coord conv pic](docs/coord_conv.png =250x200)
+<img src="docs/coord_conv.png" alt="coord conv pic" width="200px"/>
 
 * Ray's [toolbox for deep learning](https://raynardj.github.io/ray/)
