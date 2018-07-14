@@ -13,7 +13,7 @@ python tutorial, staging for deep/machine learning course
 
 #### Also created for coderbunker deep learning
 
-This course is the basic deep learning course that follows closely on Jeremy Howard's course.fast.ai
+This course is the basic deep learning course that follows closely on Jeremy Howard's [fast.ai course](course.fast.ai)
 
 #### Environment Installation
 
