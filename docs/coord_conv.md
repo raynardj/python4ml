@@ -10,6 +10,16 @@ Original [very awesome post here](https://eng.uber.com/coordconv/), they even ma
 
 Here is the pytorch deployment of coord conv module.
 
+
+The core pytorch code could be as short as the following:
+
+```python
+bs,ch,h,w = x.size()
+        h_coord = torch.range(start = 0,end = h-1).unsqueeze(0).unsqueeze(0).unsqueeze(-1).repeat([bs,1,1,w])/(h/2)-1
+        w_coord = torch.range(start = 0,end = w-1).unsqueeze(0).unsqueeze(0).unsqueeze(0).repeat([bs,1,h,1])/(w/2)-1
+        return torch.cat([x,h_coord,w_coord],dim=1)
+```
+The complete nn module is like following
 ```python
 import torch
 
