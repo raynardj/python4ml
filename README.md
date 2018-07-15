@@ -1,5 +1,7 @@
 # Python for Machine Learning
 
+
+## Python
 python tutorial, staging for deep/machine learning course
 
 [Lesson 1](1.1_lesson1.ipynb)
@@ -8,12 +10,30 @@ python tutorial, staging for deep/machine learning course
 [Lesson 4](1.4_lesson4.ipynb)
 [lesson 5](1.5_lesosn5.ipynb)
 
+## Deep Learning
+
+* [Mighty MLP(Multi-Layer Perceptron)](3.1.1_mighty_mlp.ipynb)
+
+* [Recommender: Deep Collaborative Filtering](3.1.3_recommender_system.ipynb)
+
 #### Originally designed to teach Alex python, thank you for your constant learning enthusiasm
 
 
 #### Also created for coderbunker deep learning
 
 This course is the basic deep learning course that follows closely on Jeremy Howard's [fast.ai course](course.fast.ai)
+
+[Checklist before we start and a reading list](https://raynardj.github.io/python4ml/docs/pre_checklist)
+
+#### Experiments
+
+* [The coord conv from the uber paper](https://raynardj.github.io/python4ml/docs/coord_conv)
+
+<img src="docs/coord_conv.png" alt="coord conv pic" width="200px"/>
+
+* Ray's [toolbox for deep learning](https://raynardj.github.io/ray/)
+
+<img src="https://raynardj.github.io/ray/img/Match.jpg" alt="match box pic" width="200px"/>
 
 #### Environment Installation
 
@@ -39,15 +59,3 @@ If you don't have any of these, try the following format in the command line:
 ~/anaconda3/bin/pip install keras==2.2.0
 ```
 assuming your anaconda3 is at ```~/anaconda3/```
-
-[Checklist before we start and a reading list](https://raynardj.github.io/python4ml/docs/pre_checklist)
-
-#### Experiments
-
-* [The coord conv from the uber paper](https://raynardj.github.io/python4ml/docs/coord_conv)
-
-<img src="docs/coord_conv.png" alt="coord conv pic" width="200px"/>
-
-* Ray's [toolbox for deep learning](https://raynardj.github.io/ray/)
-
-<img src="https://raynardj.github.io/ray/img/Match.jpg" alt="match box pic" width="200px"/>
