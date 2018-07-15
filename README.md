@@ -18,7 +18,7 @@ python tutorial, staging for deep/machine learning course
 
 * [How Machine Learns To Read📚](3.1.2_how_machine_learns_to_read.ipynb)
 
-* [From Keras to 🔥PyTorch🔥]
+* [From Keras to 🔥PyTorch🔥](3.5_from_keras_to_pytorch.ipynb)
 
 #### Originally designed to teach Alex python, thank you for your constant learning enthusiasm
 
@@ -39,7 +39,13 @@ This course is the basic deep learning course that follows closely on Jeremy How
 
 <img src="https://raynardj.github.io/ray/img/Match.jpg" alt="match box pic" width="200px"/>
 
-#### Environment Installation
+* Fast [KMeans by batch with GPU](https://raynardj.github.io/ray/docs/kmean_torch), how to train a 60 minutes kmeans in 3 seconds, with [example here](https://raynardj.github.io/ray/docs/gowalla_preprocess)
+
+<img src="https://raynardj.github.io/ray/img/accelerate.jpg" alt="kemans accelerated" width="200px"/>
+
+* A PyTorch [training wrapper](https://raynardj.github.io/ray/docs/matchbox)
+
+### Environment Installation
 
 Follow the [installation instructions](https://raynardj.github.io/python4ml/docs/INSTALL)
 
