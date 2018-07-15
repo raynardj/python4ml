@@ -33,15 +33,15 @@ This course is the basic deep learning course that follows closely on Jeremy How
 
 * [The coord conv from the uber paper](https://raynardj.github.io/python4ml/docs/coord_conv)
 
-<img src="docs/coord_conv.png" alt="coord conv pic" width="200px"/>
+<img src="docs/coord_conv.png" style="border-radius:7px;" alt="coord conv pic" width="200px"/>
 
 * Ray's [toolbox for deep learning](https://raynardj.github.io/ray/)
 
-<img src="https://raynardj.github.io/ray/img/Match.jpg" alt="match box pic" width="200px"/>
+<img src="https://raynardj.github.io/ray/img/Match.jpg" style="border-radius:7px;" alt="match box pic" width="200px"/>
 
 * Fast [KMeans by batch with GPU](https://raynardj.github.io/ray/docs/kmean_torch), how to train a 60 minutes kmeans in 3 seconds, with [example here](https://raynardj.github.io/ray/docs/gowalla_preprocess)
 
-<img src="https://raynardj.github.io/ray/img/accelerate.jpg" alt="kemans accelerated" width="200px"/>
+<img src="https://raynardj.github.io/ray/img/accelerate.jpg" style="border-radius:7px;" alt="kemans accelerated" width="200px"/>
 
 * A PyTorch [training wrapper](https://raynardj.github.io/ray/docs/matchbox)
 
