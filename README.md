@@ -4,17 +4,21 @@
 ## Python
 python tutorial, staging for deep/machine learning course
 
-[Lesson 1](1.1_lesson1.ipynb)
-[Lesson 2](1.2_lesson2.ipynb)
-[Lesson 3](1.3_lesson3.ipynb)
-[Lesson 4](1.4_lesson4.ipynb)
-[lesson 5](1.5_lesosn5.ipynb)
+[1️⃣ Lesson 1](1.1_lesson1.ipynb)
+[2️⃣ Lesson 2](1.2_lesson2.ipynb)
+[3️⃣ Lesson 3](1.3_lesson3.ipynb)
+[4️⃣ Lesson 4](1.4_lesson4.ipynb)
+[5️⃣ lesson 5](1.5_lesosn5.ipynb)
 
 ## Deep Learning
 
-* [Mighty MLP(Multi-Layer Perceptron)](3.1.1_mighty_mlp.ipynb)
+* [Mighty💪 MLP(Multi-Layer Perceptron)](3.1.1_mighty_mlp.ipynb)
 
-* [Recommender: Deep Collaborative Filtering](3.1.3_recommender_system.ipynb)
+* [Recommender: Deep Collaborative Filtering💰💰💰](3.1.3_recommender_system.ipynb)
+
+* [How Machine Learns To Read📚](3.1.2_how_machine_learns_to_read.ipynb)
+
+* [From Keras to 🔥PyTorch🔥]
 
 #### Originally designed to teach Alex python, thank you for your constant learning enthusiasm
 
