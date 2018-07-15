@@ -62,10 +62,23 @@ tensorflow == '1.8.0'
 keras == '2.2.0'
 ```
 
-Other versions of above library will probably work
+Other versions of above library will probably work.
+
+Assuming your anaconda3 is at ```~/anaconda3/```
 
 If you don't have any of these, try the following format in the command line:
 ```
 ~/anaconda3/bin/pip install keras==2.2.0
 ```
-assuming your anaconda3 is at ```~/anaconda3/```
+If you are on Mac:
+```
+~/anaconda3/bin/pip install torch torchvision
+```
+To install PyTorch. For other system, You'll have to visit their [homepage](https://pytorch.org/) to copy/paste the right command to install.
+
+### Ray
+
+Yeah, I listened to my friends any name my tool belt ray.
+
+Ray is a github repository [here](https://github.com/raynardj/ray)
+
