@@ -49,3 +49,5 @@ assuming your anaconda3 is at ```~/anaconda3/```
 <img src="docs/coord_conv.png" alt="coord conv pic" width="200px"/>
 
 * Ray's [toolbox for deep learning](https://raynardj.github.io/ray/)
+
+<img src="https://raynardj.github.io/ray/img/Match.jpg" alt="match box pic" width="200px"/>
