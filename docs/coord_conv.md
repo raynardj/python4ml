@@ -15,9 +15,9 @@ The core pytorch code could be as short as the following:
 
 ```python
 bs,ch,h,w = x.size()
-        h_coord = torch.range(start = 0,end = h-1).unsqueeze(0).unsqueeze(0).unsqueeze(-1).repeat([bs,1,1,w])/(h/2)-1
-        w_coord = torch.range(start = 0,end = w-1).unsqueeze(0).unsqueeze(0).unsqueeze(0).repeat([bs,1,h,1])/(w/2)-1
-        return torch.cat([x,h_coord,w_coord],dim=1)
+h_coord = torch.range(start = 0,end = h-1).unsqueeze(0).unsqueeze(0).unsqueeze(-1).repeat([bs,1,1,w])/(h/2)-1
+w_coord = torch.range(start = 0,end = w-1).unsqueeze(0).unsqueeze(0).unsqueeze(0).repeat([bs,1,h,1])/(w/2)-1
+return torch.cat([x,h_coord,w_coord],dim=1)
 ```
 The complete nn module is like following
 ```python
@@ -55,3 +55,63 @@ class Coord2d(nn.Module):
 ```
 
 From now on, you can use coord conv as simple as you use any nn.Module in pytorch
+
+
+### Intuitive understanding of coord value
+
+```python
+import torch
+x = torch.rand(64,3,320,320)
+bs,ch,h,w = x.size()
+h_coord = torch.range(start = 0,end = h-1).unsqueeze(0).unsqueeze(0).unsqueeze(-1).repeat([bs,1,1,w])/(h/2)-1
+w_coord = torch.range(start = 0,end = w-1).unsqueeze(0).unsqueeze(0).unsqueeze(0).repeat([bs,1,h,1])/(w/2)-1
+coord = torch.cat([h_coord,w_coord],dim=1)
+```
+
+
+```python
+coord[0,:,0,0]
+```
+
+
+
+
+    tensor([-1., -1.])
+
+
+
+
+```python
+coord[0,:,0,-1]
+```
+
+
+
+
+    tensor([-1.0000,  0.9937])
+
+
+
+
+```python
+coord[0,:,-1,0]
+```
+
+
+
+
+    tensor([ 0.9937, -1.0000])
+
+
+
+
+```python
+coord[0,:,int(320/2),int(320/3)]
+```
+
+
+
+
+    tensor([ 0.0000, -0.3375])
+
+
