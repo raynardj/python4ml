@@ -23,9 +23,11 @@ python tutorial, staging for deep/machine learning course
 #### Originally designed to teach Alex python, thank you for your constant learning enthusiasm
 
 
-#### Also created for coderbunker deep learning
+#### Also created for [coderbunker](http://www.coderbunker.com/co-learning) deep learning talk sessions
 
-This course is the basic deep learning course that follows closely on Jeremy Howard's [fast.ai course](course.fast.ai)
+This course is the basic deep learning course that follows closely on Jeremy Howard's fantasic /free /life-changing [fast.ai course](course.fast.ai). 
+
+The most of notebooks are just trails we left behind passing on their awesomeness.
 
 [Checklist before we start and a reading list](https://raynardj.github.io/python4ml/docs/pre_checklist)
 
@@ -78,7 +80,26 @@ To install PyTorch. For other system, You'll have to visit their [homepage](http
 
 ### Ray
 
-Yeah, I listened to my friends any name my tool belt ray.
+In some lines of code you might see
+
+```python
+from ray import matchbox
+```
+
+or
+```
+from ray.lprint import lprint
+```
+
+Yeah, I listened to my friends any named my tool belt ray.
 
 Ray is a github repository [here](https://github.com/raynardj/ray)
+
+### Contact Us
+
+If you want to be a contributor:
+
+mail: ```raynard@rasenn.com```
+
+wechat: 417848506 remark:"python4ml"
 
