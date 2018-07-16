@@ -1,6 +1,8 @@
 # Coord Conv 
 
-Recently Uber claiming the conceived a brillian major modification on convolutional layer. The improvement on problem set like obj detection and deep RL is significant (especially if obj's position in you task is a critical info). Because the original convolution filter is translation invariant (not sensitive to position in the grid map)
+Recently Uber claiming the conceived a brilliant major modification on convolutional layer. The improvement on tasks like obj detection and deep RL is significant (especially if obj's spatial location in you task is a critical info). 
+
+Because the original convolution filter is translation invariant (not sensitive to position in the grid map). It's a weight sharing mechanism to share parameters between different positions in the grid map
 
 ![coord conv pic](coord_conv.png)
 
@@ -67,7 +69,7 @@ h_coord = torch.range(start = 0,end = h-1).unsqueeze(0).unsqueeze(0).unsqueeze(-
 w_coord = torch.range(start = 0,end = w-1).unsqueeze(0).unsqueeze(0).unsqueeze(0).repeat([bs,1,h,1])/(w/2)-1
 coord = torch.cat([h_coord,w_coord],dim=1)
 ```
-
+Check the coord values in specific grid location
 
 ```python
 coord[0,:,0,0]
