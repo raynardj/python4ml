@@ -45,7 +45,7 @@ The most of notebooks are just trails we left behind passing on their awesomenes
 
 <img src="https://raynardj.github.io/ray/img/accelerate.jpg" style="border-radius:7px;" alt="kemans accelerated" width="200px"/>
 
-* A PyTorch [training wrapper](https://raynardj.github.io/ray/docs/matchbox)
+* A PyTorch [training wrapper](https://raynardj.github.io/ray/docs/matchbox) to simplify tracking
 
 ### Environment Installation
 
