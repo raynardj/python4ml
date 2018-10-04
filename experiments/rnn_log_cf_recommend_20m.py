@@ -305,7 +305,7 @@ for fold in range(K):
     trainer.val_action  = val_action
     
     l.p("fold training start", fold)
-    trainer.train(12)
+    trainer.train(12,name="rnn_cf_fold%s"%(fold))
     l.p("fold training finished",fold)
 l.p("training finished")
 
