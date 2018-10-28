@@ -256,7 +256,7 @@ def val_action(*args,**kwargs):
 
 l.p("making train/test split")
 user_count = len(userId)
-K = 3
+K = 2
 valid_split = dict({})
 random = np.random.rand(user_count)
 from ray.matchbox import Trainer
@@ -296,7 +296,7 @@ for fold in range(K):
 
     opt = Adam(mln.parameters())
     loss_func = nn.MSELoss()
-    trainer = Trainer(train_ds, val_dataset=valid_ds, batch_size=16, print_on=3)
+    trainer = Trainer(train_ds, val_dataset=valid_ds, batch_size=512, print_on=3)
     train_len = len(trainer.train_data)
     valid_len = len(trainer.val_data)
     l.p("train_len",train_len)
@@ -305,7 +305,7 @@ for fold in range(K):
     trainer.val_action  = val_action
     
     l.p("fold training start", fold)
-    trainer.train(12,name="rnn_cf_fold%s"%(fold))
+    trainer.train(12,name="rnn_cf_fold%s_3"%(fold))
     l.p("fold training finished",fold)
 l.p("training finished")
 
