@@ -28,14 +28,15 @@ torch.cuda.empty_cache()
 # In[2]:
 
 
-def get_avgpool_vgg():
+def get_vgg(switch_avg=True):
     vgg_model = vgg16(pretrained=True)
-    for layer_i in range(len(vgg_model.features)): 
-        if type(vgg_model.features[layer_i])==torch.nn.modules.pooling.MaxPool2d:
-            vgg_model.features[layer_i] = torch.nn.modules.AvgPool2d(kernel_size=2,stride=2,padding=0,ceil_mode=False)
+    if switch_avg:
+        for layer_i in range(len(vgg_model.features)): 
+            if type(vgg_model.features[layer_i])==torch.nn.modules.pooling.MaxPool2d:
+                vgg_model.features[layer_i] = torch.nn.modules.AvgPool2d(kernel_size=2,stride=2,padding=0,ceil_mode=False)
     return vgg_model
 
-vgg_model = get_avgpool_vgg()
+vgg_model = get_vgg(switch_avg = False)
 
 
 # In[3]:
@@ -85,8 +86,8 @@ else:
         img_np = img.data.numpy()
         return np.clip(np.squeeze(img_np,axis=0),0.,1.)
 
-# def show_img(img):
-#     return plt.imshow(param_2_npimg(img))
+def show_img(img):
+    return plt.imshow(param_2_npimg(img))
 
 def save_img(img, path):
     return plt.imsave(path,param_2_npimg(img))
@@ -101,6 +102,7 @@ from PIL import Image
 from torch.optim import Adam
 from torch.utils.data.dataset import Dataset
 from forgebox.ftorch.train import Trainer
+from forgebox.ftorch.layers import UnNormalize
 from pathlib import Path
 import os
 
@@ -135,49 +137,45 @@ DATA = HOME/"data"
 # In[11]:
 
 
-style_img = Image.open(DATA/"style_transfer"/"style"/"vg_face.jpg")
-style_arr = torch_shape(torch.FloatTensor(np.expand_dims(np.array(style_img.resize((p("width"),p("height")))),axis=0))/255)
+from torchvision.datasets import ImageFolder
+from torchvision import transforms
 
-if CUDA: style_arr = style_arr.cuda()
-# style_img.resize((p("width"),p("height")))
+trans = transforms.Compose([
+                    transforms.CenterCrop((p("height"),p("width"))),
+                    transforms.ToTensor(),
+                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),])
+                   
 
 
 # In[12]:
+
+
+style_img = Image.open(DATA/"style_transfer"/"style"/"monet.jpg")
+style_arr = trans(style_img).unsqueeze(dim=0)
+
+if CUDA: style_arr = style_arr.cuda()
+style_img.resize((p("width"),p("height")))
+
+
+# In[13]:
 
 
 ctt_img = Image.open(DATA/"style_transfer"/"img"/"shanghai.jpg",)
 ctt_img = ctt_img.convert('RGB')
 ctt_arr = torch_shape(torch.FloatTensor(np.expand_dims(np.array(ctt_img.resize((p("width"),p("height")))),axis=0))/255)
 if CUDA: ctt_arr = ctt_arr.cuda()
-# ctt_img.resize((p("width"),p("height")))
+ctt_img.resize((p("width"),p("height")))
 
 
 # #### Dataset
 
-# In[13]:
-
-
-from torchvision.datasets import ImageFolder
-from torchvision import transforms
-
-
 # In[14]:
-
-
-trans = transforms.Compose([
-                    transforms.CenterCrop((p("height"),p("width"))),
-                    transforms.ToTensor(),])
-#                     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-                   
-
-
-# In[15]:
 
 
 ds = ImageFolder("/data/coco/",transform = trans)
 
 
-# In[16]:
+# In[15]:
 
 
 from torch.utils.data import DataLoader
@@ -188,7 +186,7 @@ x, y = next(gen)
 x.size()
 
 
-# In[17]:
+# In[16]:
 
 
 # from tqdm import trange
@@ -201,14 +199,14 @@ x.size()
 # 
 # Content Reconstruction + Style Reconstruction
 
-# In[18]:
+# In[17]:
 
 
 def conv(ni,nf, ks = 3, stride=1,actn=True, pad=None, bn=True):
     pad = ks//2 if pad == None else pad
     layers = [nn.Conv2d(ni, nf,ks, stride=stride, padding = pad, bias = not bn)]
+    if bn: layers.append(nn.InstanceNorm2d(nf,affine=True))
     if actn: layers.append(nn.ReLU(inplace = True))
-    if bn: layers.append(nn.BatchNorm2d(nf))
     return nn.Sequential(*layers)
 
 class ResSequentialCenter(nn.Module):
@@ -243,11 +241,13 @@ class Convert(nn.Module):
 #         if CUDA: self.cuda()
         
     def forward(self,x):
-        return torch.sigmoid(self.features(x))
+        x = self.features(x)
+        x = torch.tanh(x)*2
+        return x
     
 
 
-# In[19]:
+# In[18]:
 
 
 def gram(img):
@@ -256,17 +256,20 @@ def gram(img):
 def gram_loss(pred,targ):
     targsize = tuple(targ.size())
     bs,ch,h,w = targsize
-    return mse_func(gram(pred),gram(targ))/(ch*h*w)*1e6
+    return mse_func(gram(pred),gram(targ))/(ch*h*w)*1e5
 
 
-# In[23]:
+# In[19]:
 
 
 con_indices = [6,11,18,25] # for conv_2_1, conv_3_1, conv_4_1, conv_5_1
-# con_wgt = [0.025,0.275,5.,0.2]
-con_wgt = [1.,1.,1.,1.]
+con_wgt = [0.025,0.275,5.,0.2]
+# con_wgt = [1.,1.,1.,1.]
 bs = 8
 style_arr = style_arr.repeat(bs,1,1,1)
+p("tv_sty_wgt",1e-3) 
+p("ctt_wgt",1e4)
+unnorm = UnNormalize()
 
 trainer = Trainer(ds,batch_size=bs,shuffle=True, print_on=2, num_workers = 6)
 vgg_feat = vgg_model.features
@@ -291,7 +294,7 @@ def action(*args,**kwargs):
     
     img = convert(x)
     # content
-    ctt_loss =  calc_ctt_loss(img,x,0)*p("ctt_wgt",) # content loss
+    ctt_loss =  calc_ctt_loss(img,x,0)*p("ctt_wgt") # content loss
     # style
     style_losses = []
     for l in range(len(con_indices)): # for conv_1_1, conv_2_1, conv_3_1, conv_4_1, conv_5_1
@@ -304,40 +307,37 @@ def action(*args,**kwargs):
     style_losses = []
     
 #     sty_loss*=p("sty_wgt",1) # style loss
-    tv_loss = tv_func(torch_shape(img))*p("tv_sty_wgt",) # total variation loss
+    tv_loss = tv_func(torch_shape(img))*p("tv_sty_wgt") # total variation loss
     loss = ctt_loss+sty_loss+tv_loss
     
     loss.backward()
     trainer.opt.step()
     
     if kwargs["ite"]%50 == 49:
-        save_img(img[:1,:,:,:].permute(0,2,3,1),str(DATA/"style_transfer"/"result"/("%s.jpg"%(kwargs["ite"]))))
+        save_img(unnorm(img[:1,:,:,:]).permute(0,2,3,1),str(DATA/"style_transfer"/"result"/("%s.jpg"%(kwargs["ite"]))))
     if kwargs["ite"]%256 == 0:
         trainer.opt = Adam(convert.parameters(),)
-        torch.save(convert.state_dict(),"/home/paperspace/data/pcloss.vg.3.npy")
     return {"loss":loss.item(),"ctt":ctt_loss.item(),"sty":sty_loss.item(),"tv":tv_loss.item()}
 
 
-# In[24]:
+# In[20]:
 
 
 convert = Convert()
-if p("transfer"):
-    convert.load_state_dict(torch.load(p("starting_weights")))
 if CUDA: convert.cuda()
 
 
-# In[25]:
+# In[21]:
 
 
 trainer.opt = Adam(convert.parameters(),)
 trainer.train(p("epochs_sty",1))
 
 
-# In[26]:
+# In[ ]:
 
 
-
+torch.save(convert.state_dict(),"/home/paperspace/data/pcloss.mn.2.npy")
 
 
 # In[ ]:
