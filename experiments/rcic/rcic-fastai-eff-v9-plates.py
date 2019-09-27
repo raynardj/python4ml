@@ -388,7 +388,7 @@ if LOAD:
 
 learn.unfreeze()
 learn.lr_find() #<-- uncomment to determine the learning rate (commented to reduce time)
-learn.recorder.plot(suggestion=True) 
+# learn.recorder.plot(suggestion=True) 
 
 
 # In[ ]:
