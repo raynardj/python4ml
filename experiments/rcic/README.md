@@ -2,7 +2,7 @@
 
 ##### Xiaochen(Raynard) Zhang
 
-![rcic image](https://storage.googleapis.com/kaggle-competitions/kaggle/14420/logos/header.png?t=2019-06-26-02-51-18")
+![rcic image](header.png)
 
 The codes and notebooks for [Recursion Cellular Image Classification](https://www.kaggle.com/c/recursion-cellular-image-classification/overview). It's my first kaggle medal(88/866).![bronze img](https://www.kaggle.com/static/images/medals/discussion/bronzel@1x.png)
 
