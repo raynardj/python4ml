@@ -34,3 +34,5 @@
 * None-AI personal projects, I'm not looking for this line of job, the following are just showcase of engineering proficiency
     * [Read sense](http://www.rasenn.com/), an online english literature library I built up in 3 days. Simple CRUD on book, author, user and permissions. Hooked up to google reCAPTCHA. [git repository here](https://github.com/raynardj/readsense)
     * [A wedding management tool](https://github.com/raynardj/wedding) for my own wedding. Able to manage guests/tables, and randomly check our photos with our own love quotes.
+    * [A raspberry pi liquid flow LED effect according to device movement](https://github.com/raynardj/rpi/blob/master/nerotears.py)
+    
