@@ -29,6 +29,7 @@
     * My experiments on [object detection, yolov3 with DenseNet backbone](https://github.com/raynardj/obj_detection)
     * [Sequence to sequence from scratch](https://github.com/raynardj/seqtwoseq)
     * A universal [PyTorch API docker](https://github.com/raynardj/pytorch_api)
+    * [KMeans on batch](https://raynardj.github.io/ray/docs/kmean_torch), a lighting fast way to run Kmeans with 100+ centeroids. It can be accelerated on GPU.
 
 * None-AI personal projects, I'm not looking for this line of job, the following are just showcase of engineering proficiency
     * [Read sense](http://www.rasenn.com/), an online english literature library I built up in 3 days. Simple CRUD on book, author, user and permissions. Hooked up to google reCAPTCHA. [git repository here](https://github.com/raynardj/readsense)
