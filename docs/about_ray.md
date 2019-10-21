@@ -1,14 +1,12 @@
 # Ray's Coding
-# 张晓晨主要的一些代码
 
-* Please tolerate my naive codes years ago. 请务必容忍我多年前粗糙的代码习惯
-* They are not all perfect, but they sure show the learning curve, and hope it can bring a sense of authenticity. 这是长时间以来的一些记录，有些并不完美， 但这体现了学习曲线， 并希望能给到一种真实。
-* Some notebook has heavy Latex comments or images, and won't render on github page. It has to be opened in jupyter notebook to work properly. 有的是带了很多latex或图的笔记， 所以github可能无法直接render, 需要在jupyter中打开
+* They are not all perfect, but they sure show the learning curve, and hope it can bring a sense of authenticity. 
+* Some notebook has heavy Latex comments or images, and won't render on github page. It has to be opened in jupyter notebook to work properly. 
 
 ### AI/ Machine Learning/ Deep Learning
 * Kaggle competitions:
     * I go by username raynardj, sometime I change name, sometime I join team, but always the Robert D Jr avatar.learning
-    * [Recursion Cellular Image Classification](https://www.kaggle.com/c/recursion-cellular-image-classification), bronze medal, public leaderboard [(88/866)](https://www.kaggle.com/c/recursion-cellular-image-classification/leaderboard), competition summary and codes [here](https://github.com/raynardj/python4ml/tree/master/experiments/rcic)
+    * [Recursion Cellular Image Classification](https://www.kaggle.com/c/recursion-cellular-image-classification), bronze medal, competition summary and codes [here](https://github.com/raynardj/python4ml/tree/master/experiments/rcic)
     * [Generative Dog Images](https://www.kaggle.com/c/generative-dog-images), public leaderboard [(143/924)](https://www.kaggle.com/c/generative-dog-images/leaderboard)
     * [APTOS 2019 Blindness Detection](https://www.kaggle.com/c/aptos2019-blindness-detection), public leaderboard [(524/2943)](https://www.kaggle.com/c/aptos2019-blindness-detection/leaderboard)
     
