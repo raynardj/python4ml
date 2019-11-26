@@ -9,11 +9,11 @@
 #### Kaggle 竞赛
 Kaggle progression level: Competitions Expert
     * My Kaggle [profile page](https://www.kaggle.com/raynardj), highest rank 1953/125564 (global top 1.6%)
-    * [Understand Clouds from Satellite Images](https://www.kaggle.com/c/understanding_cloud_organization/), bronze medal, competion codes summary and codes [here](https://github.com/iofthetiger/ucsi)
+    * [Understand Clouds from Satellite Images](https://www.kaggle.com/c/understanding_cloud_organization/), bronze medal, competition codes summary and codes [here](https://github.com/iofthetiger/ucsi)
     * [Recursion Cellular Image Classification](https://www.kaggle.com/c/recursion-cellular-image-classification), bronze medal, competition summary and codes [here](https://github.com/raynardj/python4ml/tree/master/experiments/rcic)
     * [Generative Dog Images](https://www.kaggle.com/c/generative-dog-images), public leaderboard [(143/924)](https://www.kaggle.com/c/generative-dog-images/leaderboard)
     * [APTOS 2019 Blindness Detection](https://www.kaggle.com/c/aptos2019-blindness-detection), public leaderboard [(524/2943)](https://www.kaggle.com/c/aptos2019-blindness-detection/leaderboard)
-    
+
 #### AI/DL/ML Experiments
 #### AI/DL/ML实验 尝试
 * Experiments, papers to code. For the purpose of true representation, these are all my original coding, if any code I borrow heavily from other resource, I won't list it here.
@@ -35,7 +35,7 @@ Kaggle progression level: Competitions Expert
     * My experiments on [object detection, yolov3 with DenseNet backbone](https://github.com/raynardj/obj_detection)
     * [Sequence to sequence from scratch](https://github.com/raynardj/seqtwoseq)
     * A universal [PyTorch API docker](https://github.com/raynardj/pytorch_api)
-    * [KMeans on batch](https://raynardj.github.io/ray/docs/kmean_torch), a lighting fast way to run Kmeans with 100+ centeroids. It can be accelerated on GPU.
+    * [KMeans on batch](https://raynardj.github.io/ray/docs/kmean_torch), a lighting fast way to run KMeans with 100+ centeroids. It can be accelerated on GPU.
 
 * None-AI personal projects, I'm not looking for this line of job, the following are just showcase of engineering proficiency
     * [Read sense](http://www.rasenn.com/), an online english literature library I built up in 3 days. Simple CRUD on book, author, user and permissions. Hooked up to google reCAPTCHA. [git repository here](https://github.com/raynardj/readsense)
