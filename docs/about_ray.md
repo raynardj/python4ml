@@ -8,11 +8,11 @@
 #### Kaggle competitions:
 #### Kaggle 竞赛
 Kaggle progression level: Competitions Expert
-    * My Kaggle [profile page](https://www.kaggle.com/raynardj), highest rank 1953/125564 (global top 1.6%)
-    * [Understand Clouds from Satellite Images](https://www.kaggle.com/c/understanding_cloud_organization/), bronze medal, competition codes summary and codes [here](https://github.com/iofthetiger/ucsi)
-    * [Recursion Cellular Image Classification](https://www.kaggle.com/c/recursion-cellular-image-classification), bronze medal, competition summary and codes [here](https://github.com/raynardj/python4ml/tree/master/experiments/rcic)
-    * [Generative Dog Images](https://www.kaggle.com/c/generative-dog-images), public leaderboard [(143/924)](https://www.kaggle.com/c/generative-dog-images/leaderboard)
-    * [APTOS 2019 Blindness Detection](https://www.kaggle.com/c/aptos2019-blindness-detection), public leaderboard [(524/2943)](https://www.kaggle.com/c/aptos2019-blindness-detection/leaderboard)
+* My Kaggle [profile page](https://www.kaggle.com/raynardj), highest rank 1953/125564 (global top 1.6%)
+* [Understand Clouds from Satellite Images](https://www.kaggle.com/c/understanding_cloud_organization/), bronze medal, competition codes summary and codes [here](https://github.com/iofthetiger/ucsi)
+* [Recursion Cellular Image Classification](https://www.kaggle.com/c/recursion-cellular-image-classification), bronze medal, competition summary and codes [here](https://github.com/raynardj/python4ml/tree/master/experiments/rcic)
+* [Generative Dog Images](https://www.kaggle.com/c/generative-dog-images), public leaderboard [(143/924)](https://www.kaggle.com/c/generative-dog-images/leaderboard)
+* [APTOS 2019 Blindness Detection](https://www.kaggle.com/c/aptos2019-blindness-detection), public leaderboard [(524/2943)](https://www.kaggle.com/c/aptos2019-blindness-detection/leaderboard)
 
 #### AI/DL/ML Experiments
 #### AI/DL/ML实验 尝试
