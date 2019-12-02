@@ -16,16 +16,16 @@ Kaggle progression level: Competitions Expert
 
 #### AI/DL/ML Experiments
 #### AI/DL/ML实验 尝试
-* Experiments, papers to code. For the purpose of true representation, these are all my original coding, if any code I borrow heavily from other resource, I won't list it here.
-    * [An Intriguing Failing of Convolutional Neural Networks and the CoordConv Solution](https://arxiv.org/abs/1807.03247) from uber AI lab, code and doc [here](https://raynardj.github.io/python4ml/docs/coord_conv)
-    * [A Discriminative Feature Learning Approach for Deep Face Recognition](https://ydwen.github.io/papers/WenECCV16.pdf)'s [deployment and visualization](https://github.com/raynardj/python4ml/blob/master/papers/centerloss_in_pytorch.ipynb)
-    * [Language detection](https://github.com/raynardj/python4ml/blob/master/experiments/language_detection.ipynb), the entire experiment pipeline
-    * Intuitive experiment/ understanding of vanilla [optimizers: SGD, Adagrad, Adam](https://github.com/raynardj/python4ml/blob/master/experiments/fun_with_optimizer_and_more_fun_with_image_reconstruction.ipynb)
-    * An [experiment](https://github.com/raynardj/python4ml/blob/master/experiments/poi_reco.ipynb) of point of interest recommendation.
-    * [Adversarial Attack](https://github.com/raynardj/python4ml/blob/master/experiments/Adversarial_Attack.ipynb)
-    * [WGAN with deep CNN](https://github.com/raynardj/python4ml/blob/master/experiments/gan/wgan_with_deep_conv.ipynb)
-    * [Code](https://github.com/raynardj/python4ml/blob/master/experiments/style_transfer_perceptual_loss.py) for paper [Perceptual Losses for Real-Time Style Transfer and Super-Resolution](http://arxiv.org/abs/1603.08155).
-    * [Language Modeling](https://github.com/raynardj/python4ml/blob/master/experiments/books/language_modeling_v4_plato.ipynb)
+Experiments, papers to code. For the purpose of true representation, these are all my original coding, if any code I borrow heavily from other resource, I won't list it here.
+* [An Intriguing Failing of Convolutional Neural Networks and the CoordConv Solution](https://arxiv.org/abs/1807.03247) from uber AI lab, code and doc [here](https://raynardj.github.io/python4ml/docs/coord_conv)
+* [A Discriminative Feature Learning Approach for Deep Face Recognition](https://ydwen.github.io/papers/WenECCV16.pdf)'s [deployment and visualization](https://github.com/raynardj/python4ml/blob/master/papers/centerloss_in_pytorch.ipynb)
+* [Language detection](https://github.com/raynardj/python4ml/blob/master/experiments/language_detection.ipynb), the entire experiment pipeline
+* Intuitive experiment/ understanding of vanilla [optimizers: SGD, Adagrad, Adam](https://github.com/raynardj/python4ml/blob/master/experiments/fun_with_optimizer_and_more_fun_with_image_reconstruction.ipynb)
+* An [experiment](https://github.com/raynardj/python4ml/blob/master/experiments/poi_reco.ipynb) of point of interest recommendation.
+* [Adversarial Attack](https://github.com/raynardj/python4ml/blob/master/experiments/Adversarial_Attack.ipynb)
+* [WGAN with deep CNN](https://github.com/raynardj/python4ml/blob/master/experiments/gan/wgan_with_deep_conv.ipynb)
+* [Code](https://github.com/raynardj/python4ml/blob/master/experiments/style_transfer_perceptual_loss.py) for paper [Perceptual Losses for Real-Time Style Transfer and Super-Resolution](http://arxiv.org/abs/1603.08155).
+* [Language Modeling](https://github.com/raynardj/python4ml/blob/master/experiments/books/language_modeling_v4_plato.ipynb)
 
 #### git repository
 #### git 库
