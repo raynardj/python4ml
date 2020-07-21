@@ -13077,7 +13077,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Data-Science-on-Textual-Information">Data Science on Textual Information<a class="anchor-link" href="#Data-Science-on-Textual-Information">&#182;</a></h1><blockquote><p>Papers on NLP</p>
+<h1 id="Data-Science-on-Textual-Information">Data Science on Textual Information<a class="anchor-link" href="#Data-Science-on-Textual-Information">&#182;</a></h1><blockquote><p>Papers on NLP, transformer, NER etc</p>
 </blockquote>
 
 </div>
@@ -13180,6 +13180,13 @@ $h_{c} = [t_{T},maxpool(H),meanpool(H)]$, where $[]$ is the concatenation</li>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Basics">Basics<a class="anchor-link" href="#Basics">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Transformer-paper:-Attention-is-all-you-need">Transformer paper: <a href="https://arxiv.org/abs/1706.03762">Attention is all you need</a><a class="anchor-link" href="#Transformer-paper:-Attention-is-all-you-need">&#182;</a></h4>
 </div>
 </div>
@@ -13217,6 +13224,166 @@ $h_{c} = [t_{T},maxpool(H),meanpool(H)]$, where $[]$ is the concatenation</li>
 </ul>
 </li>
 <li>Self-attention generated from this model, when visualized, can show text syntax structure</li>
+</ul>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="GPT-based">GPT based<a class="anchor-link" href="#GPT-based">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="GPT-paper-Improve-Language-Understanding-by-Generative-Pre-Training,-Radford-et-al.">GPT paper <a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf">Improve Language Understanding by Generative Pre-Training, Radford et al.</a><a class="anchor-link" href="#GPT-paper-Improve-Language-Understanding-by-Generative-Pre-Training,-Radford-et-al.">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>Use Transformer-like(only decoder) model structure with <strong>2 stages</strong></p>
+<ul>
+<li><strong>Un-supervised pretraining</strong> Text generation as pretraining</li>
+<li><strong>Supervised finetuning</strong> Discriminative finetune on specific task (auxiliary objective)</li>
+</ul>
+<p>Framework</p>
+<ul>
+<li>Unsupervised training: language modeling, guessing the next-word, trying to maximize the following<ul>
+<li>$L_{1}(u) = \sum_{i} log P(u_{i}|u_{i-k},...,u_{i-1};\Theta)$</li>
+</ul>
+</li>
+<li>Supervised, with extra parameter $W_{y}$ to predict $y$, $P(y|x^{1},...,x^{m}) = softmax(h_{l}^{m}W_{y})$, trying to maximize, $h_{l}^{m}$ is the last token's corresponding vector at last layer's outputs: <ul>
+<li>$L_{2}(C) = \sum_{x,y} log P(y|x^{1},...,x^{m})$</li>
+<li>Train with auxiliary objective: $L_{3}(C) = L_{2}(C)+\lambda*L_{1}(C)$</li>
+<li>at this stage, only the $W_{y}$ and embedding for delimiter are trainable</li>
+</ul>
+</li>
+</ul>
+<p>Data input</p>
+<ul>
+<li>In case of fine-tuning qa and other structured input data, make the structured  data into special token separated long string of sentence</li>
+<li>The paper pretrained on BooksCorpus dataset</li>
+</ul>
+<p>Model</p>
+<ul>
+<li><strong>Decoder</strong> only, decoder is the transformer layer with <strong>masked</strong> self-attention heads, 12 layers of decoder transformer</li>
+<li>Positional embeddings are <strong>learnt</strong> not fixed</li>
+<li>BPE tokenized</li>
+<li>GELU instead of relu</li>
+<li>python ftfy(<a href="https://ftfy.readthedocs.io/en/latest/">fix text for you</a>) clean the text</li>
+<li>spaCy tokenized the text</li>
+<li>$\lambda = 0.5$ </li>
+</ul>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="BERT-based">BERT based<a class="anchor-link" href="#BERT-based">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="BERT-Paper,-BERT:-Pre-training-of-Deep-Bidirectional-Transformers-for-Language-Understanding,-Devlin-et-al.">BERT Paper, <a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding, Devlin et al.</a><a class="anchor-link" href="#BERT-Paper,-BERT:-Pre-training-of-Deep-Bidirectional-Transformers-for-Language-Understanding,-Devlin-et-al.">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>For GPT is undirectional, the "most important new contribution" of BERT is it makes the pretrain task <strong>Bidirectional</strong>, for the purpose of comparison with GPT, BERT share many hyper-parameters with GPT (to be specific, $BERT_{base}$), comparing the structure, GPT masked out the right-context input for each layer.</p>
+<p>Use <strong>encoder</strong> instead of decoder, the bidirectional Transformer is often referred to as a "Transformer encoder", while the left-context-only version is referred to as "Transformer decoder"</p>
+<ul>
+<li>only encoder</li>
+<li>also learned positional encoding, but has additional segment embeddings (one emb for A of the pair, one for B of the pair)</li>
+<li>The start of the sentence, we use <code>[CLS]</code> token, the corresponding token in last output of transformer will be used for fine-tune classification</li>
+<li>Pretrain is slightly slower, but perform much better on GLUE benchmark</li>
+</ul>
+<p>Model pretrained on 2 tasks</p>
+<ul>
+<li>Masked Language Modeling (<strong>MLM</strong>), 15% random pick of word-piece masked</li>
+<li>Next Sentence Prediction (is /is not?: next sentence), 50% random</li>
+</ul>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="ALBERT-paper,-ALBERT:-A-Lite-BERT-for-Self-Supervised-Learning-of-Language-Representation-Lan-et-al.">ALBERT paper, <a href="https://arxiv.org/abs/1909.11942v6">ALBERT: A Lite BERT for Self-Supervised Learning of Language Representation Lan et al.</a><a class="anchor-link" href="#ALBERT-paper,-ALBERT:-A-Lite-BERT-for-Self-Supervised-Learning-of-Language-Representation-Lan-et-al.">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>Is having better NLP models as easy as having larger models?
+A configuration similar to BERT-large can has 18x fewer parameters, and trains 1.7x faster</p>
+<p>Model Structure:</p>
+<ul>
+<li>Seperate the <strong>hidden layer size</strong> vs <strong>embedding size</strong>, easier to grow hidden layers from the size of vocabulary embedding</li>
+<li>Cross layer parameter <strong>sharing</strong>, more layers, not much param size growth</li>
+</ul>
+<p>Method</p>
+<ul>
+<li>SOP(sentence-order prediction) instead of NSP (next sentenc prediction)</li>
+</ul>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="ELECTRA-paper,-ELECTRA:-Pre-Training-Text-Encoders-as-Discriminators-Rather-Than-Generator,-Clark-et-al">ELECTRA paper, <a href="https://arxiv.org/abs/2003.10555">ELECTRA: Pre-Training Text Encoders as Discriminators Rather Than Generator, Clark et al</a><a class="anchor-link" href="#ELECTRA-paper,-ELECTRA:-Pre-Training-Text-Encoders-as-Discriminators-Rather-Than-Generator,-Clark-et-al">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>ELECTRA short for <strong>Efficently Learning an Encoder that Classifies Token Rplacements Accurately</strong>,The paper proposed a training scheme, which can outperform GPT, BERT, RoBERTa, with much less computation (one GPU 4 days), a bit like GAN but not doing any adversarial learning</p>
+<ul>
+<li>The reason this works better than BERT's traing method: MLM learning has the model to learn 15% of the positions in the sentence, this doesn't seem an efficient way of learning</li>
+</ul>
+<p>Method:</p>
+<ul>
+<li>Use 2 encoder transformer, <ul>
+<li>Generator, training on MLM(masked language modeling) task</li>
+<li>Discriminator,training on the generated text with guessed tokens from Generator, trying to do classification(original or replaced) on <strong>every token</strong> (that's how ELECTRA learns faster than usual MLM)</li>
+</ul>
+</li>
+<li>If Generator guessed the write token, it will be treated as original (different from GAN)</li>
+<li>We try to minimized the combined loss $\mathcal{L}_{MLM}(x,\theta_{G}) +\lambda \mathcal{L}_{Disc(x,\theta_{D})}$</li>
+<li>Don't backpropagate the discriminator loss through the generator</li>
+<li>Train the 2 model altogether from the start, then only D, never only G at first, G would be too difficult for D</li>
+</ul>
+<p>Model structure</p>
+<ul>
+<li>same as BERT-Base</li>
+<li>Generators are <strong>smaller</strong> (decreasing layer size,1/4 to 1/2 of discriminator works the best), so can only share embedding, if same structure, all the weights can be tied</li>
+<li><strong>Small</strong>, designed to be trained on a single GPU<ul>
+<li>Sequence length:512 to 128</li>
+<li>token embedding: 768 to 128</li>
+<li>hidden dimension size 768 to 256</li>
+<li>batch size: 256 to 128</li>
+</ul>
+</li>
+<li><strong>Large</strong> , same as BART large</li>
 </ul>
 </blockquote>
 
