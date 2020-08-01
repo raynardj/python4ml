@@ -1,7 +1,8 @@
 # Python for Machine Learning
 
+> Python notebooks and experiments
 
-## Python
+## Python Tutorial
 python tutorial, staging for deep/machine learning course
 
 [1️⃣ Lesson 1](1.1_lesson1.ipynb)
