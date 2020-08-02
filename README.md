@@ -79,28 +79,23 @@ If you are on Mac:
 ```
 To install PyTorch. For other system, You'll have to visit their [homepage](https://pytorch.org/) to copy/paste the right command to install.
 
-### Ray
+### Libs
 
 In some lines of code you might see
-
-```python
-from ray import matchbox
+```
+from forgebox.imports import *
 ```
 
-or
+You can do 
 ```
-from ray.lprint import lprint
+pip install forgebox
 ```
-
-Yeah, I listened to my friends any named my tool belt ray.
-
-Ray is a github repository [here](https://github.com/raynardj/ray)
 
 ### Contact Us
 
 If you want to be a contributor:
 
-mail: ```raynard@rasenn.com```
+mail: ```b2ray2c@gmail.com```
 
 wechat: 417848506 remark:"python4ml"
 
